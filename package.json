@@ -1,8 +1,5 @@
-
-
-
 {
-  "name": "awdiz-11-backend",
+  "name": "awdiz_backend_study",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,16 +9,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/swaraj54/awdiz-11-backend.git"
+    "url": "git+https://github.com/JYOTIGHADI/awdiz_backend_study.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/swaraj54/awdiz-11-backend/issues"
+    "url": "https://github.com/JYOTIGHADI/awdiz_backend_study/issues"
   },
-  "homepage": "https://github.com/swaraj54/awdiz-11-backend#readme",
+  "homepage": "https://github.com/JYOTIGHADI/awdiz_backend_study#readme",
   "dependencies": {
     "express": "^5.1.0",
     "nodemon": "^3.1.10"

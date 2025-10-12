@@ -3,8 +3,12 @@ import express from "express";
 const app = express();
 
 
-app.get("/name", (req, res) => {
-  res.send("Welcome to the Express server! Hello I'm Jyoti!");
+app.get("/", (req, res) => {
+  res.send("Welcome to the Express server!");
+});
+
+app.post("/name", (req,res) =>{
+  res.send("hey i'm Jyoti")
 });
 
 app.listen(8000, () => {
