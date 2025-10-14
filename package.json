@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/JYOTIGHADI/awdiz_backend_study#readme",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "nodemon": "^3.1.10"
   }
