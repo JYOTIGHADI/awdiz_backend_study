@@ -6,62 +6,112 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+let users = [
+  { id: 1, name: "Jyoti Ghadi", email: "jyoti@gmail.com" },
+  { id: 2, name: "John Doe", email: "john@example.com" },
 
-const users = [];
+];
 
 
 app.get("/", (req, res) => {
-  console.log(process.env.NAME, "process.env.NAME");
-  console.log(process.env.MONGODB_URL, " process.env.MONGODB_URL");
-
   process.env.NAME
     ? res.send(`Hello ${process.env.NAME}! Welcome to the Express server!`)
     : res.send("Please check your .env file.");
 });
 
 
-app.post("/register", (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-
-    if (!name || !email || !password) {
-      return res.send("All fields are required");
-    }
-
-
-    const existingUser = users.find((u) => u.email === email);
-    if (existingUser) {
-      return res.send("User already exists");
-    }
-
-    users.push({ name, email, password });
-    res.send(" User Registered successfully");
-  } catch (err) {
-    console.error(err);
-    res.send("Internal server error");
-  }
+app.get("/users", (req, res) => {
+  return res.status(200).json({
+    message: "All users fetched successfully",
+    data: users,
+  });
 });
 
-app.post("/login", (req, res) => {
-  try {
-    const { email, password } = req.body;
 
+app.get("/users/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
 
-    if (!email || !password) {
-      return res.send("Email and password are required");
-    }
-
-    const existingUser = users.find((u) => u.email === email);
-    if (!existingUser || existingUser.password !== password) {
-      return res.send("Invalid credentials");
-    }
-
-    res.send("User Login successfully");
-  } catch (err) {
-    console.error(err);
-    res.send("Internal server error");
+  if (!userId) {
+    return res.status(400).json({ error: "Enter a valid User ID" });
   }
+
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  return res.status(200).json({
+    message: "User fetched successfully",
+    data: { user },
+  });
+});
+
+
+app.post("/users", (req, res) => {
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+    return res.status(400).json({ error: "Name and email are required" });
+  }
+
+  const existingUser = users.find((u) => u.email === email);
+  if (existingUser) {
+    return res.status(400).json({ error: "User already exists" });
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    name,
+    email,
+  };
+
+  users.push(newUser);
+
+  return res.status(201).json({
+    message: "User registered successfully",
+    data: newUser,
+  });
+});
+
+
+app.put("/users/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+  const { name, email } = req.body;
+
+  const user = users.find((u) => u.id === userId);
+
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  if (name) user.name = name;
+  if (email) user.email = email;
+
+  return res.status(200).json({
+    message: "User updated successfully",
+    data: user,
+  });
+});
+
+app.delete("/users/:id", (req, res) => {
+  const userId = parseInt(req.params.id);
+
+  if (!userId) {
+    return res.status(400).json({ error: "Provide a valid ID" });
+  }
+
+  const userIndex = users.findIndex((u) => u.id === userId);
+
+  if (userIndex === -1) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  users.splice(userIndex, 1);
+
+  return res.status(200).json(
+    "User deleted successfully",
+  );
 });
 
 
