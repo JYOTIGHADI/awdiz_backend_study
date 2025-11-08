@@ -1,15 +1,15 @@
-import { Router } from "express";
-import { login , register } from "../controllers/auth.controllers.js";
+import express, { Router } from "express";
+import { getCurrentUser, login, register } from "../controllers/auth.controllers.js";
+import { tokenDecoder } from "../middlewares/tokenMiddlware.js";
+const authRoute = Router();
 
-const authRouter = Router();
+authRoute.use(express.json());
 
+authRoute.post("/login", login);
 
-authRouter.post("/login", login);
-
-authRouter.post("/register", register);
-
-
-
+authRoute.post("/register", register);
 
 
-export default authRouter;
+authRoute.get("/get-current-user", tokenDecoder, getCurrentUser);
+
+export default authRoute;
