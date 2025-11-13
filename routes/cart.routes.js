@@ -1,13 +1,3 @@
-// import { Router } from "express";
-
-// const cartRouter = Router();
-
-// cartRouter.get("/addcart", (req, res) => {
-//   res.send(" This is the Add to Cart Route");
-// });
-
-// export default cartRouter;
-
 
 import { Router } from "express";
 import {
@@ -15,15 +5,17 @@ import {
   getUserCart,
   removeFromCart,
 } from "../controllers/cart.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const CartRouter = Router();
 
 // Add product to cart
-CartRouter.post("/add", addToCart);
+CartRouter.post("/add", verifyToken, addToCart);
 
 // Get user cart
-CartRouter.get("/getcart", getUserCart);
+CartRouter.get("/getcart", verifyToken, getUserCart);
 // Remove product from cart
-CartRouter.post("/remove", removeFromCart);
+CartRouter.post("/remove", verifyToken, removeFromCart);
 
 export default CartRouter;
+
