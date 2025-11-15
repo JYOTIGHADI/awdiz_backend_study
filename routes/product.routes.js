@@ -1,5 +1,5 @@
 
-  import { Router } from "express";
+  import { Router, text } from "express";
   import {
     addProduct,
     deleteProducts,
@@ -16,6 +16,5 @@ import { verifyToken } from "../middlewares/auth.middleware.js";
   productsRouter.delete("/deleteproducts/:id", deleteProducts);
   productsRouter.put("/editproducts/:id", editProducts);
   productsRouter.get("/getallfilterproducts", verifyToken, getFilterAllProducts);
-  
 
   export default productsRouter;

@@ -152,3 +152,80 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
+export const placeOrder = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // fetch user cart
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
+
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ success: false, message: "Cart is empty" });
+    }
+
+    let orderItems = [];
+    let totalAmount = 0;
+
+    for (let item of cart.items) {
+      const product = item.productId;
+
+      // Check stock
+      if (product.quantity < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message: `${product.title} does not have enough stock`,
+        });
+      }
+
+      // Deduct stock
+      product.quantity -= item.quantity;
+      await product.save();
+
+      // Prepare order product list
+      orderItems.push({
+        productId: product._id,
+        quantity: item.quantity,
+        price: product.price,
+      });
+
+      totalAmount += product.price * item.quantity;
+    }
+
+    // Create order
+    const order = await Order.create({
+      userId,
+      sellerId: orderItems[0].sellerId, // if single seller
+      products: orderItems,
+      totalAmount,
+    });
+
+    // Clear cart
+    cart.items = [];
+    await cart.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Order placed successfully",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const getSellerOrders = async (req, res) => {
+  try {
+    const sellerId = req.seller.id;
+
+    const orders = await Order.find({ sellerId })
+      .populate("userId", "name email")
+      .populate("products.productId", "title price imageUrl");
+
+    res.json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
