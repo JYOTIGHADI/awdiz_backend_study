@@ -8,7 +8,7 @@ import { tokenDecoder } from "./middlewares/tokenMiddlware.js";
 import authRouter from "./routes/auth.routes.js";
 import CartRouter from "./routes/cart.routes.js";
 import productsRouter from "./routes/product.routes.js";
-
+import blogsRouter from "./routes/Blogs.routes.js";
 
 
 
@@ -31,6 +31,7 @@ app.use("/api/v1", tokenDecoder , mainRouter);
 app.use("/api/v1/cart", CartRouter);
 // app.use("/api/v1",  mainRouter);
 app.use("/api/v1/products", productsRouter);
+app.use("/api/v1/blogs", blogsRouter );
 
 
 
